@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using System.Threading;
 using NUnit.Framework;
+using System.Diagnostics;
 
 namespace MyFirstTest
 {
@@ -9,6 +10,18 @@ namespace MyFirstTest
     {
         [Test]
         public void task1()
+        {
+            Task t = Task.Run(() =>
+            {
+                for (int i = 0; i < 100; i++)
+                    Console.Write('*');
+            });
+
+            t.Wait();
+        }
+
+        [Test]
+        public void task2()
         {
             const int repetitions = 1000;
             Task task = new Task(() =>
@@ -40,12 +53,13 @@ namespace MyFirstTest
         string mFilename = "cj.txt";
 
         [Test]
-        public void task2()
+        public void task3()
         {
             Task task = new Task(playMacro);
             task.Start();
             task.Wait();
         }
+
 
         ///////////////////////////////////////
 
@@ -147,5 +161,61 @@ namespace MyFirstTest
                 Console.WriteLine(e.InnerExceptions[0].Message);
             }
         }
+
+        [Test]
+        public void stopWatch1()
+        {
+            Stopwatch stopWatch = new Stopwatch();
+            stopWatch.Start();
+            Thread.Sleep(3000);
+            stopWatch.Stop();
+            // Get the elapsed time as a TimeSpan value.
+            TimeSpan ts = stopWatch.Elapsed;
+
+            // Format and display the TimeSpan value. 
+            string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+                ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
+            Console.WriteLine("RunTime " + elapsedTime);
+        }
+
+        [Test]
+        public void stopWatch2()
+        {
+            Stopwatch stopWatch = new Stopwatch();
+            stopWatch.Start();
+            Thread.Sleep(1000);
+            Console.WriteLine("RunTime " + stopWatch.ElapsedMilliseconds);
+
+            stopWatch.Reset();
+            stopWatch.Start();
+            Thread.Sleep(1000);
+            Console.WriteLine("RunTime " + stopWatch.ElapsedMilliseconds);
+
+            stopWatch.Reset();
+            stopWatch.Start();
+            Thread.Sleep(1000);
+            Console.WriteLine("RunTime " + stopWatch.ElapsedMilliseconds);
+
+            stopWatch.Stop();
+        }
+
+        static EventWaitHandle _waitHandle = new AutoResetEvent(false);
+
+        [Test]
+        public void autoResetEvent()
+        {
+            new Thread(waiter).Start();
+            Thread.Sleep(1000);
+            _waitHandle.Set();
+        }
+
+        void waiter()
+        {
+            Console.WriteLine("Waiting...");
+            _waitHandle.WaitOne();
+            Console.WriteLine("Notified"); 
+        }
+
+
     }
 }
