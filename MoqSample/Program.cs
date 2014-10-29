@@ -17,31 +17,47 @@ namespace MoqSample
         public string Category { set; get; }
     }
 
-    public interface IValueCalculator
-    {
+    public interface IValueCalculator {
         decimal ValueProducts(IEnumerable<Product> products);
     }
 
-    public class LinqValueCalculator : IValueCalculator
-    {
-        public decimal ValueProducts(IEnumerable<Product> products)
-        {
-            return products.Sum(p => p.Price);
+    public interface IDiscountHelper {
+        decimal ApplyDiscount(decimal totalParam);
+    }
+
+    public class DefaultDiscountHelper : IDiscountHelper {
+        private decimal DiscountSize;
+
+        public DefaultDiscountHelper(decimal discountParam) {
+            DiscountSize = discountParam;
+        }
+
+        public decimal ApplyDiscount(decimal totalParam) {
+            return (totalParam - (DiscountSize / 100m * totalParam));
         }
     }
 
-    public class ShoppingCart
-    {
+    public class LinqValueCalculator : IValueCalculator {
+        private IDiscountHelper discounter;
+
+        public LinqValueCalculator(IDiscountHelper discountParam){
+            discounter = discountParam;
+        }
+
+        public decimal ValueProducts(IEnumerable<Product> products) {
+            return discounter.ApplyDiscount(products.Sum(p => p.Price));
+        }
+    }
+
+    public class ShoppingCart {
         private IValueCalculator calc;
-        public ShoppingCart(IValueCalculator calcParam)
-        {
+        public ShoppingCart(IValueCalculator calcParam) {
             calc = calcParam;
         }
 
         public IEnumerable<Product> Products { get; set; }
 
-        public decimal CalculateProductTotal()
-        {
+        public decimal CalculateProductTotal() {
             return calc.ValueProducts(Products);
         }
     }
@@ -57,7 +73,8 @@ namespace MoqSample
 
         static void Main(string[] args)
         {
-            IValueCalculator calc = new LinqValueCalculator();
+            IDiscountHelper discount = new DefaultDiscountHelper(50m);
+            IValueCalculator calc = new LinqValueCalculator(discount);
             ShoppingCart cart = new ShoppingCart(calc) { Products = products };
             decimal totalValue = cart.CalculateProductTotal();
             System.Console.WriteLine("Total valule is {0}", totalValue);
