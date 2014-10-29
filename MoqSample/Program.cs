@@ -37,6 +37,12 @@ namespace MoqSample
         }
     }
 
+    public class MinimumDiscountHelper : IDiscountHelper {
+        public decimal ApplyDiscount(decimal totalParam) {
+            throw new NotImplementedException();
+        }
+    }
+
     public class LinqValueCalculator : IValueCalculator {
         private IDiscountHelper discounter;
 
