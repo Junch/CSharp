@@ -17,7 +17,12 @@ namespace MoqSample
         public string Category { set; get; }
     }
 
-    public class LinqValueCalculator
+    public interface IValueCalculator
+    {
+        decimal ValueProducts(IEnumerable<Product> products);
+    }
+
+    public class LinqValueCalculator : IValueCalculator
     {
         public decimal ValueProducts(IEnumerable<Product> products)
         {
@@ -27,8 +32,8 @@ namespace MoqSample
 
     public class ShoppingCart
     {
-        private LinqValueCalculator calc;
-        public ShoppingCart(LinqValueCalculator calcParam)
+        private IValueCalculator calc;
+        public ShoppingCart(IValueCalculator calcParam)
         {
             calc = calcParam;
         }
@@ -52,7 +57,7 @@ namespace MoqSample
 
         static void Main(string[] args)
         {
-            LinqValueCalculator calc = new LinqValueCalculator();
+            IValueCalculator calc = new LinqValueCalculator();
             ShoppingCart cart = new ShoppingCart(calc) { Products = products };
             decimal totalValue = cart.CalculateProductTotal();
             System.Console.WriteLine("Total valule is {0}", totalValue);
