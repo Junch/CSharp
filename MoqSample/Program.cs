@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Ninject;
 
 namespace MoqSample
 {
@@ -85,10 +86,14 @@ namespace MoqSample
             new Product {Name = "Corner flag", Category = "Soccer", Price = 34.95M}
         };
 
+        private static IKernel kernel = new StandardKernel();
+
         static void Main(string[] args)
         {
-            IDiscountHelper discount = new DefaultDiscountHelper(50m);
-            IValueCalculator calc = new LinqValueCalculator(discount);
+            kernel.Bind<IValueCalculator>().To<LinqValueCalculator>();
+            kernel.Bind<IDiscountHelper>().To<DefaultDiscountHelper>().WithConstructorArgument("discountParam", 50M);
+
+            IValueCalculator calc = kernel.Get<IValueCalculator>();
             ShoppingCart cart = new ShoppingCart(calc) { Products = products };
             decimal totalValue = cart.CalculateProductTotal();
             System.Console.WriteLine("Total valule is {0}", totalValue);
