@@ -77,6 +77,15 @@ namespace MoqSample
         }
     }
 
+    class FirstModule : Ninject.Modules.NinjectModule
+    {
+        public override void Load()
+        {
+            Bind<IValueCalculator>().To<LinqValueCalculator>();
+            Bind<IDiscountHelper>().To<DefaultDiscountHelper>().WithConstructorArgument("discountParam", 50M);
+        }
+    } 
+
     class Program
     {
         private static Product[] products = {
@@ -86,13 +95,10 @@ namespace MoqSample
             new Product {Name = "Corner flag", Category = "Soccer", Price = 34.95M}
         };
 
-        private static IKernel kernel = new StandardKernel();
+        private static IKernel kernel = new StandardKernel(new FirstModule());
 
         static void Main(string[] args)
         {
-            kernel.Bind<IValueCalculator>().To<LinqValueCalculator>();
-            kernel.Bind<IDiscountHelper>().To<DefaultDiscountHelper>().WithConstructorArgument("discountParam", 50M);
-
             IValueCalculator calc = kernel.Get<IValueCalculator>();
             ShoppingCart cart = new ShoppingCart(calc) { Products = products };
             decimal totalValue = cart.CalculateProductTotal();
