@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using SportsStore.Domain.Abstract;
 using SportsStore.Domain.Entities;
 
 namespace SportsStore.Domain.Concrete
 {
-    public class EFProductRepostory: IProductRepository {
+    public class EFProductRepository: IProductRepository {
         private EFDbContext context = new EFDbContext();
 
         public IEnumerable<Product> Products {

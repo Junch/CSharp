@@ -38,7 +38,7 @@ namespace SportsStore.WebUI.Infrastructure
             //});
 
             //kernel.Bind<IProductRepository>().ToConstant(mock.Object);
-            kernel.Bind<IProductRepository>().To<EFProductRepostory>();
+            kernel.Bind<IProductRepository>().To<EFProductRepository>();
         }
     }
 }
