@@ -10,17 +10,14 @@ using System.Linq;
 using System.Web.Mvc;
 using SportsStore.WebUI.HtmlHelpers;
 
-namespace SportsStore.UnitTests
-{
+namespace SportsStore.UnitTests {
     [TestClass]
-    public class UnitTest1
-    {
+    public class UnitTest1 {
         [TestMethod]
-        public void Can_Paginate()
-        {
+        public void Can_Paginate() {
             // Arrange
             Mock<IProductRepository> mock = new Mock<IProductRepository>();
-            mock.Setup(m=>m.Products).Returns( new Product[]{
+            mock.Setup(m => m.Products).Returns(new Product[]{
                 new Product {ProductID = 1, Name = "P1"},
                 new Product {ProductID = 2, Name = "P2"},
                 new Product {ProductID = 3, Name = "P3"},
@@ -33,7 +30,7 @@ namespace SportsStore.UnitTests
             controller.PageSize = 3;
 
             ProductsListViewModel result = (ProductsListViewModel)controller.List(null, 2).Model;
-            
+
             // Assert
             Product[] prodArray = result.Products.ToArray();
             Assert.IsTrue(prodArray.Length == 2);
@@ -42,14 +39,12 @@ namespace SportsStore.UnitTests
         }
 
         [TestMethod]
-        public void Can_Generate_Page_Links()
-        {
+        public void Can_Generate_Page_Links() {
             // Arrange - define an HTML helper - we need to do this
             // in order to apply the extension method
             HtmlHelper myHelper = null;
             // Arrange - create PagingInfo data
-            PagingInfo pagingInfo = new PagingInfo
-            {
+            PagingInfo pagingInfo = new PagingInfo {
                 CurrentPage = 2,
                 TotalItems = 28,
                 ItemsPerPage = 10
@@ -95,8 +90,7 @@ namespace SportsStore.UnitTests
         }
 
         [TestMethod]
-        public void Can_Filter_Products()
-        {
+        public void Can_Filter_Products() {
             // Arrange
             Mock<IProductRepository> mock = new Mock<IProductRepository>();
             mock.Setup(m => m.Products).Returns(new Product[] {
@@ -116,13 +110,12 @@ namespace SportsStore.UnitTests
 
             // Assert
             Assert.AreEqual(result.Length, 2);
-            Assert.IsTrue(result[0].Name == "P2" && result[0].Category=="Cat2");
+            Assert.IsTrue(result[0].Name == "P2" && result[0].Category == "Cat2");
             Assert.IsTrue(result[1].Name == "P4" && result[0].Category == "Cat2");
         }
 
         [TestMethod]
-        public void Can_Create_Categories()
-        {
+        public void Can_Create_Categories() {
             // Arrange
             // - create the mock repository
             Mock<IProductRepository> mock = new Mock<IProductRepository>();
@@ -146,8 +139,7 @@ namespace SportsStore.UnitTests
         }
 
         [TestMethod]
-        public void Indicates_Selected_Category()
-        {
+        public void Indicates_Selected_Category() {
             // Arrange
             // - create the mock repository
             Mock<IProductRepository> mock = new Mock<IProductRepository>();
@@ -196,6 +188,67 @@ namespace SportsStore.UnitTests
             Assert.AreEqual(res2, 2);
             Assert.AreEqual(res3, 1);
             Assert.AreEqual(resAll, 5);
+        }
+
+        [TestMethod]
+        public void Can_Add_To_Cart() {
+            // Arrange - create the mock repository
+            Mock<IProductRepository> mock = new Mock<IProductRepository>();
+            mock.Setup(m => m.Products).Returns(new Product[] {
+                new Product {ProductID = 1, Name = "P1", Category = "Apples"},
+            }.AsQueryable());
+
+            // Arrange - create a Cart
+            Cart cart = new Cart();
+
+            // Arrange - create the controller
+            CartController target = new CartController(mock.Object);
+
+            // Act - add a product to the cart
+            target.AddToCart(cart, 1, null);
+
+            // Assert
+            Assert.AreEqual(cart.Lines.Count(), 1);
+            Assert.AreEqual(cart.Lines.ToArray()[0].Product.ProductID, 1);
+        }
+
+        [TestMethod]
+        public void Adding_Product_To_Cart_Goes_To_Cart_Screen() {
+            // Arrange - create the mock repository
+            Mock<IProductRepository> mock = new Mock<IProductRepository>();
+            mock.Setup(m => m.Products).Returns(new Product[] {
+                new Product {ProductID = 1, Name = "P1", Category = "Apples"},
+            }.AsQueryable());
+
+            // Arrange - create a Cart
+            Cart cart = new Cart();
+
+            // Arrange - create the controller
+            CartController target = new CartController(mock.Object);
+
+            // Act - add a product to the cart
+            RedirectToRouteResult result = target.AddToCart(cart, 2, "myUrl");
+
+            // Assert
+            Assert.AreEqual(result.RouteValues["action"], "Index");
+            Assert.AreEqual(result.RouteValues["returnUrl"], "myUrl");
+        }
+
+        [TestMethod]
+        public void Can_View_Cart_Contents() {
+            // Arrange - create a Cart
+            Cart cart = new Cart();
+
+            // Arrange - create the controller
+            CartController target = new CartController(null);
+
+            // Act - call the Index action method
+            CartIndexViewModel result
+                = (CartIndexViewModel)target.Index(cart, "myUrl").ViewData.Model;
+
+            // Assert
+            Assert.AreSame(result.Cart, cart);
+            Assert.AreEqual(result.ReturnUrl, "myUrl");
         }
     }
 }
