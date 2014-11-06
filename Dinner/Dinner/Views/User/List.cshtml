@@ -22,7 +22,12 @@
                 <tr>
                     <td>@p.Name</td>
                     <td>@p.Email</td>
-                    <td><input type="submit" class="btn btn-danger" value="Delete" /></td>
+                    <td>
+                        @using (Html.BeginForm("Delete", "User")) {
+                            @Html.Hidden("UserId", p.UserId)
+                            <input type="submit" class="btn btn-danger" value="Delete" />
+                        }
+                    </td>
                 </tr>
             }
         </tbody>

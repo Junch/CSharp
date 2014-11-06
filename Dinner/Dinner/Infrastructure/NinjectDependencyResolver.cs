@@ -21,9 +21,9 @@ namespace Dinner.Infrastructure {
         private void AddBindings() {
             Mock<IUserRepository> mock = new Mock<IUserRepository>();
             mock.Setup(m => m.Users).Returns(new List<User> {
-                new User { Name = "Tom Hanks", Email = "tom@goole.com" },
-                new User { Name = "John Smith", Email = "John.Smith@google.com"},
-                new User { Name = "Daniel Chen", Email = "Jun.Chen@autodesk.com"}
+                new User { UserId = 1, Name = "Tom Hanks", Email = "tom@goole.com" },
+                new User { UserId = 2, Name = "John Smith", Email = "John.Smith@google.com"},
+                new User { UserId = 3, Name = "Daniel Chen", Email = "Jun.Chen@autodesk.com"}
             });
 
             kernel.Bind<IUserRepository>().ToConstant(mock.Object);

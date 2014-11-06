@@ -18,5 +18,10 @@ namespace Dinner.Controllers
         public ViewResult List() {
             return View(repository.Users);
         }
+
+        public ActionResult Delete(int userId) {
+            System.Diagnostics.Trace.WriteLine(String.Format("Delete the userId {0}", userId));
+            return RedirectToAction("List");
+        }
     }
 }
