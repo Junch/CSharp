@@ -19,14 +19,16 @@ namespace Dinner.Infrastructure {
             return kernel.GetAll(serviceType);
         }
         private void AddBindings() {
-            Mock<IUserRepository> mock = new Mock<IUserRepository>();
-            mock.Setup(m => m.Users).Returns(new List<User> {
-                new User { UserId = 1, Name = "Tom Hanks", Email = "tom@goole.com" },
-                new User { UserId = 2, Name = "John Smith", Email = "John.Smith@google.com"},
-                new User { UserId = 3, Name = "Daniel Chen", Email = "Jun.Chen@autodesk.com"}
-            });
+            //Mock<IUserRepository> mock = new Mock<IUserRepository>();
+            //mock.Setup(m => m.Users).Returns(new List<User> {
+            //    new User { UserId = 1, Name = "Tom Hanks", Email = "tom@goole.com" },
+            //    new User { UserId = 2, Name = "John Smith", Email = "John.Smith@google.com"},
+            //    new User { UserId = 3, Name = "Daniel Chen", Email = "Jun.Chen@autodesk.com"}
+            //});
 
-            kernel.Bind<IUserRepository>().ToConstant(mock.Object);
+            //kernel.Bind<IUserRepository>().ToConstant(mock.Object);
+
+            kernel.Bind<IUserRepository>().To<EFUserRepository>();
         }
     }
 }
