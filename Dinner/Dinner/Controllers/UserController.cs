@@ -19,8 +19,12 @@ namespace Dinner.Controllers
             return View(repository.Users);
         }
 
+        [HttpPost]
         public ActionResult Delete(int userId) {
-            System.Diagnostics.Trace.WriteLine(String.Format("Delete the userId {0}", userId));
+            User deletedUser = repository.DeleteUser(userId);
+            if (deletedUser != null) {
+                TempData["message"] = string.Format("{0} was deleted", deletedUser.Name);
+            }
             return RedirectToAction("List");
         }
     }

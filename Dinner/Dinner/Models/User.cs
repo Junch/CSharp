@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 namespace Dinner.Models {
     public interface IUserRepository {
         IEnumerable<User> Users { get; }
+        User DeleteUser(int userId);
     }
 
     public class User {

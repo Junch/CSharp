@@ -10,5 +10,14 @@ namespace Dinner.Models {
         public IEnumerable<User> Users {
             get { return context.Users; }
         }
+
+        public User DeleteUser(int userId) {
+            User dbEntry = context.Users.Find(userId);
+            if (dbEntry != null) {
+                context.Users.Remove(dbEntry);
+                context.SaveChanges();
+            }
+            return dbEntry;
+        }
     }
 }
