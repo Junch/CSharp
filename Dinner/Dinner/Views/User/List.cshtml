@@ -1,0 +1,13 @@
+﻿@using Dinner.Models
+@model IEnumerable<User>
+
+@{
+    ViewBag.Title = "Users";
+}
+
+@foreach (var p in Model) {
+    <div>
+        <h3>@p.Name</h3>
+        <h4>@p.Email</h4>
+    </div>
+}
