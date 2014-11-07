@@ -9,7 +9,7 @@
         <h3>Edit @Model.Name</h3>
     </div>
 
-    @using (Html.BeginForm()) {
+    @using (Html.BeginForm("Edit", "User")) {
         <div class="panel-body">
             @*@Html.EditorForModel()*@
             @foreach (var prop in ViewData.ModelMetadata.Properties) {

@@ -43,5 +43,9 @@ namespace Dinner.Controllers
             }
             return RedirectToAction("List");
         }
+
+        public ViewResult Add() {
+            return View("Edit", new User());
+        }
     }
 }
