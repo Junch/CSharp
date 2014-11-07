@@ -19,6 +19,11 @@ namespace Dinner.Controllers
             return View(repository.Users);
         }
 
+        public ViewResult Edit(int userId) {
+            User user = repository.Users.FirstOrDefault(p => p.UserId == userId);
+            return View(user);
+        }
+
         [HttpPost]
         public ActionResult Delete(int userId) {
             User deletedUser = repository.DeleteUser(userId);
