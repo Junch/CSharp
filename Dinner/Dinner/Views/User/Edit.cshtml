@@ -11,7 +11,16 @@
 
     @using (Html.BeginForm()) {
         <div class="panel-body">
-            @Html.EditorForModel()
+            @*@Html.EditorForModel()*@
+            @foreach (var prop in ViewData.ModelMetadata.Properties) {
+                if (prop.PropertyName != "UserId") {
+                    <div class="form-group">
+                        <label>@(prop.DisplayName ?? prop.PropertyName)</label>
+                        @Html.TextBox(prop.PropertyName, null,new { @class = "form-control" })
+                        @Html.ValidationMessage(prop.PropertyName)
+                    </div>
+                }
+            }
         </div>
 
         <div class="panel-footer">
