@@ -19,5 +19,18 @@ namespace Dinner.Models {
             }
             return dbEntry;
         }
+
+        public void SaveUser(User user) {
+            if (user.UserId == 0) {
+                context.Users.Add(user);
+            } else {
+                User dbEntry = context.Users.Find(user.UserId);
+                if (dbEntry != null) {
+                    dbEntry.Name = user.Name;
+                    dbEntry.Email = user.Email;
+                }
+            }
+            context.SaveChanges();
+        }
     }
 }

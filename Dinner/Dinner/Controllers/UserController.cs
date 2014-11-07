@@ -25,6 +25,17 @@ namespace Dinner.Controllers
         }
 
         [HttpPost]
+        public ActionResult Edit(User user) {
+            if (ModelState.IsValid) {
+                repository.SaveUser(user);
+                TempData["message"] = string.Format("{0} has been saved", user.Name);
+                return RedirectToAction("List");
+            }
+
+            return View(user);
+        }
+
+        [HttpPost]
         public ActionResult Delete(int userId) {
             User deletedUser = repository.DeleteUser(userId);
             if (deletedUser != null) {
